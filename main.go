@@ -1,6 +1,7 @@
 package main
 
 import (
+	// "fmt"
 	"log"
 	"website-crowdfunding/handler"
 	"website-crowdfunding/user"
@@ -21,13 +22,7 @@ func main(){
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
 
-	userInput := user.RegisterUserInput{}
-	userInput.Name = "TEST2"
-	userInput.Email = "test@email.com"
-	userInput.Occupation = "NEET"
-	userInput.Password = "123456"
-
-	userService.RegisterUser(userInput)
+	
 
 	userHandler := handler.NewUserHandler(userService)
 
@@ -37,6 +32,7 @@ func main(){
 	api := router.Group("api/v1")
 
 	api.POST("/users", userHandler.RegisterUser)
+	api.POST("/sessions", userHandler.Login)
 
 	router.Run()
 
