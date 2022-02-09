@@ -21,21 +21,6 @@ func main(){
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
-	
-	input := user.CheckEmailInput{
-		Email: "",
-	}
-	IsAvailable, err := userService.IsEmailAvailable(input)
-	if err != nil{
-		println("error")
-	}
-
-
-	if IsAvailable == true{
-		println("email available")
-	}else{
-		println("email not available")
-	}
 
 	userHandler := handler.NewUserHandler(userService)
 
@@ -46,7 +31,7 @@ func main(){
 
 	api.POST("/users", userHandler.RegisterUser)
 	api.POST("/sessions", userHandler.Login)
-	// api.GET("/users/fetch", userHandler.FetchUser)
+	api.POST("/email_checkers", userHandler.EmailAvaliability)
 
 	router.Run()
 
