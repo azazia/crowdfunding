@@ -81,3 +81,13 @@ func (h *userHandler) Login(c *gin.Context){
 
 	c.JSON(http.StatusOK, response)
 }
+
+func EmailAvaliability(c *gin.Context){
+	// input dari user
+	// input email dimapping ke struct input
+	// struct input dipassing keservice
+	// service akan memanggil repository - email sudah ada atau belum
+	// repository - db
+
+	
+}
