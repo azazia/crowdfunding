@@ -2,6 +2,7 @@ package main
 
 import (
 	// "fmt"
+	"fmt"
 	"log"
 	"website-crowdfunding/handler"
 	"website-crowdfunding/user"
@@ -21,6 +22,13 @@ func main(){
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
+
+	findID, err := userRepository.FindByID(1)
+	if err != nil{
+		fmt.Println(err.Error())
+	}
+
+	fmt.Println(findID.Name)
 
 	userHandler := handler.NewUserHandler(userService)
 

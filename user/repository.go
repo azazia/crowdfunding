@@ -5,6 +5,8 @@ import "gorm.io/gorm"
 type Repository interface {
 	Save(user User) (User, error)
 	FindByEmail(email string) (User, error)
+	FindByID(ID int) (User, error)
+	Update(user User) (User, error)
 }
 
 type repository struct {
@@ -19,7 +21,7 @@ func NewRepository(db *gorm.DB) *repository{
 
 func (r *repository) Save(user User)(User, error){
 
-	// menulis nilai ke database
+	// menulis nilai baru ke database
 	err := r.db.Create(&user).Error
 	if err != nil{
 		return user, err
@@ -34,5 +36,25 @@ func (r *repository) FindByEmail(email string)(User, error){
 	if err != nil{
 		return user, err
 	}
+	return user, nil
+}
+
+func (r *repository) FindByID(ID int) (User, error){
+	var user User
+
+	err := r.db.Where("ID = ?", ID).Find(&user).Error
+	if err != nil{
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *repository) Update(user User) (User, error){
+	err := r.db.Save(&user).Error
+	if err != nil{
+		return user, err
+	}
+
 	return user, nil
 }

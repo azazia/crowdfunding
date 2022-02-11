@@ -102,6 +102,7 @@ func (h *userHandler) EmailAvaliability(c *gin.Context){
 		return
 	}
 
+	// check apakah email sudah ada
 	isEmailAvailable, err := h.userService.IsEmailAvailable(input)
 	if err != nil {
 		errorMessage := gin.H{
@@ -122,4 +123,13 @@ func (h *userHandler) EmailAvaliability(c *gin.Context){
 	}
 	response := helper.APIResponse(metaMessage, http.StatusUnprocessableEntity, "success", data)
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *userHandler) UploadAvatar(c *gin.Context){
+	//  input dari user
+	// simpan gambar ke folder "/images"
+	// di service panggil repo
+	// JWT
+	// repo ambil data user berdasarkan ID
+	// repo update data user simpan ke  folder
 }
