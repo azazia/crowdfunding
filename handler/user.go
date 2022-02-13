@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"website-crowdfunding/helper"
 	"website-crowdfunding/user"
@@ -132,4 +133,42 @@ func (h *userHandler) UploadAvatar(c *gin.Context){
 	// JWT
 	// repo ambil data user berdasarkan ID
 	// repo update data user simpan ke  folder
+
+	// capture file
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image", http.StatusUnprocessableEntity, "error", data)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return		
+	}
+
+	// pakai hardcode dulu harusnya dari jwt
+	userID := 30
+	sUserID := fmt.Sprint(userID) + "-"
+	path := "images/"+sUserID+file.Filename
+
+	// menyimpan file yg diupload ke lokasi spedifik
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image", http.StatusUnprocessableEntity, "error", data)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return		
+	}
+
+	
+
+	_, err = h.userService.SaveAvatar(userID,path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image", http.StatusUnprocessableEntity, "error", data)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return		
+	}
+
+	data := gin.H{"is_uploaded": true}
+	response := helper.APIResponse("Avatar successfuly uploaded", http.StatusOK, "Success", data)
+	c.JSON(http.StatusOK, response)
+
 }
