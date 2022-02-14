@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"website-crowdfunding/auth"
 	"website-crowdfunding/handler"
@@ -24,9 +23,8 @@ func main(){
 	userService := user.NewService(userRepository)
 
 	authService:= auth.NewService()
-	fmt.Println(authService.GenerateToken(10))
 
-	userHandler := handler.NewUserHandler(userService)
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	// membuat router
 	router := gin.Default()

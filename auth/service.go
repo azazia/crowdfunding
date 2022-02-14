@@ -2,7 +2,7 @@ package auth
 
 import "github.com/dgrijalva/jwt-go"
 
-type service interface {
+type Service interface {
 	GenerateToken(userID int) (string, error)
 }
 
