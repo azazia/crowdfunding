@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"website-crowdfunding/auth"
 	"website-crowdfunding/handler"
 	"website-crowdfunding/user"
 
@@ -20,6 +22,9 @@ func main(){
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
+
+	authService:= auth.NewService()
+	fmt.Println(authService.GenerateToken(10))
 
 	userHandler := handler.NewUserHandler(userService)
 
