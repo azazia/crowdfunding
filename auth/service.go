@@ -40,7 +40,7 @@ func (s *jwtService) GenerateToken(userID int) (string, error) {
 }
 
 func (s *jwtService) ValidateToken(EncodedToken string) (*jwt.Token, error){
-	// cek apakah secretkey sama 
+	// cek apakah secret key sama 
 	token, err := jwt.Parse(EncodedToken, func(t *jwt.Token) (interface{}, error) {
 		// cek apakah method yg digunakan sama
 		_, ok := t.Method.(*jwt.SigningMethodHMAC)
