@@ -163,7 +163,7 @@ func (h *userHandler) UploadAvatar(c *gin.Context){
 	}
 
 	// pakai hardcode dulu harusnya dari jwt
-	userID := 30
+	userID := 31
 	sUserID := fmt.Sprint(userID) + "-"
 	path := "images/"+sUserID+file.Filename
 
