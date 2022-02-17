@@ -162,8 +162,10 @@ func (h *userHandler) UploadAvatar(c *gin.Context){
 		return		
 	}
 
-	// pakai hardcode dulu harusnya dari jwt
-	userID := 31
+	// get currentuser
+	currentUser := c.MustGet("currentUser").(user.User)
+	userID :=  currentUser.ID
+
 	sUserID := fmt.Sprint(userID) + "-"
 	path := "images/"+sUserID+file.Filename
 
