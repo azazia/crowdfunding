@@ -1,10 +1,12 @@
 package main
 
 import (
+	
 	"log"
 	"net/http"
 	"strings"
 	"website-crowdfunding/auth"
+	"website-crowdfunding/campaign"
 	"website-crowdfunding/handler"
 	"website-crowdfunding/helper"
 	"website-crowdfunding/user"
@@ -24,10 +26,10 @@ func main(){
 	}
 
 	userRepository := user.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
+
 	userService := user.NewService(userRepository)
-
 	authService := auth.NewService()
-
 	userHandler := handler.NewUserHandler(userService, authService)
 
 	// membuat router
@@ -89,7 +91,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 			return
 		}
 
-		// set context isinya user
+		// set ccontext dengan key currentuser isinya user
 		c.Set("currentUser", user)
 	}
 }
