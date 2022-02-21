@@ -28,17 +28,17 @@ func main(){
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
 
-	userService := user.NewService(userRepository)
+
+	userService := user.NewService(userRepository) //parsing userRepository agar punya akses ke repository
 	authService := auth.NewService()
+	campaignService := campaign.NewService(campaignRepository)
 	userHandler := handler.NewUserHandler(userService, authService)
 
-	tes, _ := campaignRepository.FindAll()
-
-	for _, value := range tes {
+	// tes
+	tes, _ := campaignService.FindCampaigns(10)
+	for _, value := range tes{
 		fmt.Println(value.Name)
-		if len(value.CampaignImages) > 0{
-			fmt.Println(value.CampaignImages[0].FileName)
-		}
+		fmt.Println(value.CampaignImages[0].FileName)
 	}
 
 	// membuat router
