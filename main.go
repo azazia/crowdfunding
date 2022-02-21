@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -32,14 +31,9 @@ func main(){
 	userService := user.NewService(userRepository) //parsing userRepository agar punya akses ke repository
 	authService := auth.NewService()
 	campaignService := campaign.NewService(campaignRepository)
-	userHandler := handler.NewUserHandler(userService, authService)
 
-	// tes
-	tes, _ := campaignService.FindCampaigns(10)
-	for _, value := range tes{
-		fmt.Println(value.Name)
-		fmt.Println(value.CampaignImages[0].FileName)
-	}
+	userHandler := handler.NewUserHandler(userService, authService)
+	campaignHandler := handler.NewCampaignHandler(campaignService)
 
 	// membuat router
 	router := gin.Default()
@@ -50,6 +44,8 @@ func main(){
 	api.POST("/sessions", userHandler.Login)
 	api.POST("/email_checkers", userHandler.EmailAvaliability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+
+	api.GET("/campaign", campaignHandler.GetCampaigns)
 
 	router.Run()
 
