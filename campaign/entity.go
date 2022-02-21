@@ -15,11 +15,12 @@ type Campaign struct {
 	Slug          string
 	CreatedAt	  time.Time
 	UpdatedAt	  time.Time
+	CampaignImages	[]CampaignImage
 }
 
 type CampaignImage struct{
 	ID				int
-	CammpaignID		int
+	CampaignID		int
 	FileName		string
 	IsPrimary		bool
 	CreatedAt		time.Time

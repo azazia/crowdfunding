@@ -1,7 +1,7 @@
 package main
 
 import (
-	
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -31,6 +31,15 @@ func main(){
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
 	userHandler := handler.NewUserHandler(userService, authService)
+
+	tes, _ := campaignRepository.FindAll()
+
+	for _, value := range tes {
+		fmt.Println(value.Name)
+		if len(value.CampaignImages) > 0{
+			fmt.Println(value.CampaignImages[0].FileName)
+		}
+	}
 
 	// membuat router
 	router := gin.Default()
