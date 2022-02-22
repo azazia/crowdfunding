@@ -37,7 +37,9 @@ func main(){
 
 	// membuat router
 	router := gin.Default()
+	router.Static("/images", "./images")
 	// membuat grup
+
 	api := router.Group("api/v1")
 
 	api.POST("/users", userHandler.RegisterUser)
