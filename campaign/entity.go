@@ -3,19 +3,19 @@ package campaign
 import "time"
 
 type Campaign struct {
-	ID            int
-	UserID        int
-	Name          string
-	ShortDesc     string
-	GoalAmount    int
-	CurrentAmount int
-	Desc          string
-	Perks         string
-	BackerCount   int
-	Slug          string
-	CreatedAt	  time.Time
-	UpdatedAt	  time.Time
-	CampaignImages	[]CampaignImage
+	ID            		int
+	UserID        		int
+	Name          		string
+	ShortDescription	string
+	GoalAmount    		int
+	CurrentAmount 		int
+	Description         string
+	Perks         		string
+	BackerCount   		int
+	Slug          		string
+	CreatedAt	  		time.Time
+	UpdatedAt	  		time.Time
+	CampaignImages		[]CampaignImage
 }
 
 type CampaignImage struct{
