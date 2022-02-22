@@ -28,6 +28,11 @@ func FormatCampaign(campaign Campaign) CampaignFormatter{
 }
 
 func FormatCampaigns(campaigns []Campaign) []CampaignFormatter{
+	// jika tidak ada data yg ditemukan akan mengembalikan array kosong
+	if len(campaigns) == 0{
+		return []CampaignFormatter{}
+	}
+
 	var campaignsFormatter []CampaignFormatter
 
 	for _, campaign := range campaigns{
