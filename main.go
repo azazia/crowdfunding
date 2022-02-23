@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -36,12 +35,6 @@ func main(){
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
 
-	// tes service campaign
-	input := campaign.GetCampaignDetailInput{}
-	input.ID = 2
-	tes, _ := campaignService.GetCampaignByID(input)
-	fmt.Println(tes)
-
 	// membuat router
 	router := gin.Default()
 	router.Static("/images", "./images")
@@ -55,6 +48,7 @@ func main(){
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
 
 	api.GET("/campaign", campaignHandler.GetCampaigns)
+	api.GET("/campaign/:id", campaignHandler.GetCampaign)
 
 	router.Run()
 
