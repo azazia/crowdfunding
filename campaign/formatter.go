@@ -54,6 +54,18 @@ type CampaignDetailFormatter struct {
 	UserID        int      `json:"user_id"`
 	Desc          string   `json:"description"`
 	Perks         []string `json:"perks"`
+	User		  CampaignUserFormatter	`json:"user"`
+	Images		  []CampaignImageFormatter `json:"images"`
+}
+
+type CampaignUserFormatter struct {
+	Name		string		`json:"name"`
+	ImageURL	string		`json:"image_url"`	
+}
+
+type CampaignImageFormatter struct {
+	ImageURL	string	`json:"image_url"`
+	IsPrimary	bool	`json:"is_primary"`
 }
 
 func FormatDetailCampaign(campaign Campaign) CampaignDetailFormatter {
@@ -73,12 +85,25 @@ func FormatDetailCampaign(campaign Campaign) CampaignDetailFormatter {
 	}
 
 	var perks []string
-
 	for _, perk := range strings.Split(campaign.Perks, ","){
 		perks = append(perks, strings.TrimSpace(perk))
 	}
-
 	formatter.Perks = perks
+
+	formatter.User = CampaignUserFormatter{
+		Name: campaign.User.Name,
+		ImageURL: campaign.User.AvatarFileName,
+	}
+
+	images := []CampaignImageFormatter{}
+	for _, image := range campaign.CampaignImages{
+		campaignImageFormatter := CampaignImageFormatter{}
+		campaignImageFormatter.ImageURL = image.FileName
+		campaignImageFormatter.IsPrimary = image.IsPrimary
+
+		images = append(images, campaignImageFormatter)
+	}
+	formatter.Images = images
 
 	return formatter
 }
