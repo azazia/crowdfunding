@@ -9,6 +9,7 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible // indirect
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/gosimple/slug v1.12.0 // indirect
 	github.com/jackc/pgx/v4 v4.14.1 // indirect
 	github.com/jcmturner/gokrb5/v8 v8.2.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

@@ -47,8 +47,9 @@ func main(){
 	api.POST("/email_checkers", userHandler.EmailAvaliability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
 
-	api.GET("/campaign", campaignHandler.GetCampaigns)
+	api.GET("/campaigns", campaignHandler.GetCampaigns)
 	api.GET("/campaign/:id", campaignHandler.GetCampaign)
+	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
 
 	router.Run()
 

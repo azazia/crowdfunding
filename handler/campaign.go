@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"website-crowdfunding/campaign"
 	"website-crowdfunding/helper"
+	"website-crowdfunding/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,18 +16,18 @@ import (
 // repository: GetAll, GetByID
 // db
 type campaignHandler struct{
-	service campaign.Service
+	campaignService campaign.Service
 } 
 
-func NewCampaignHandler(service campaign.Service) *campaignHandler{
-	return &campaignHandler{service}
+func NewCampaignHandler(campaignService campaign.Service) *campaignHandler{
+	return &campaignHandler{campaignService}
 }
 
 func (h *campaignHandler) GetCampaigns(c *gin.Context){
 	// konversi string ke int dari hasil query user_id
 	userID, _ := strconv.Atoi(c.Query("user_id"))
 
-	campaigns, err := h.service.GetCampaigns(userID)
+	campaigns, err := h.campaignService.GetCampaigns(userID)
 	if err != nil {
 		response := helper.APIResponse("error to get campaign", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
@@ -52,7 +53,7 @@ func (h *campaignHandler) GetCampaign(c *gin.Context){
 		return
 	}
 
-	detailCampaign, err := h.service.GetCampaignByID(input)
+	detailCampaign, err := h.campaignService.GetCampaignByID(input)
 	if err != nil {
 		response := helper.APIResponse("Failed to get detail of campaign", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
@@ -67,3 +68,29 @@ func (h *campaignHandler) GetCampaign(c *gin.Context){
 // ambil current user dari jwt/handler
 // panggil service, parameternya input struct(dan buat slug)
 // panggil repository,untuk simpan data campaign baru
+
+func(h *campaignHandler) CreateCampaign(c *gin.Context){
+	var input campaign.CreateCampaignInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+		response := helper.APIResponse("Failed to create new campaign", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
+
+	newCampaign, err := h.campaignService.CreateCampaign(input)
+	if err != nil{
+		response := helper.APIResponse("Failed to create new campaign", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to create new campaign", http.StatusOK, "success", campaign.FormatCampaign(newCampaign))	
+	c.JSON(http.StatusOK, response)
+}
