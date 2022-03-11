@@ -25,3 +25,21 @@ func TestRepository(t *testing.T){
 
 	campaignRepository.Save(campaign)
 }
+
+func TestUpdateCampaign(t *testing.T){
+	dsn := "host=localhost user=postgres password=nciruuxz dbname=crowdfunding port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	if err != nil{
+		log.Fatal(err)
+	}
+
+	campaignRepository := NewRepository(db)
+	campaign := Campaign{
+		ID: 12,
+		UserID: 33,
+		Name: "penggalangan dana",
+	}
+
+	campaignRepository.Update(campaign)
+}
