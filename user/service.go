@@ -96,7 +96,7 @@ func (s *service) SaveAvatar(ID int, fileLocation string) (User, error){
 	if err != nil{
 		return updatedUser, err
 	}
-	return user, nil
+	return updatedUser, nil
 }
 
 func (s *service) GetUserByID(ID int) (User, error){
