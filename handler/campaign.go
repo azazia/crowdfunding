@@ -134,5 +134,12 @@ func (h *campaignHandler) UpdateCampaign(c *gin.Context){
 
 	response := helper.APIResponse("Success to update campaign", http.StatusOK, "success", updatedCampaign)
 	c.JSON(http.StatusOK, response)
-
 }
+
+// handler
+// tangkap input dan ubah ke struct input
+// save image ke dalam suatu folder
+// service : kondisi panggil repo pint 2, panggil repo point 1
+// repository
+// 1. create image/save data image ke table campaign_images
+// 2. ubah is_primary true ke false
