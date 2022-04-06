@@ -1,9 +1,10 @@
 package campaign
 
 import (
-	"testing"
-	"gorm.io/gorm"
 	"log"
+	"testing"
+
+	"gorm.io/gorm"
 
 	"gorm.io/driver/postgres"
 )
@@ -58,3 +59,26 @@ func TestService(T *testing.T){
 // 	// 	log.Fatal(err)
 // 	// }
 // }
+
+func TestSaveCampaignImage(T *testing.T){
+	dsn := "host=localhost user=postgres password=nciruuxz dbname=crowdfunding port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	if err != nil{
+		log.Fatal(err)
+	}
+
+	campaignRepository := NewRepository(db)
+	campaignService := NewService(campaignRepository)
+	input := CreateCampaignImageInput{}
+	input.CampaignID = 2
+	input.IsPrimary = true
+
+	fileLocation := "teslagi"
+	
+	_, err = campaignService.SaveCampaignImage(input, fileLocation)
+	if err != nil{
+		log.Fatal(err)
+	}
+
+}
