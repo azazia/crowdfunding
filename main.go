@@ -9,6 +9,7 @@ import (
 	"website-crowdfunding/handler"
 	"website-crowdfunding/helper"
 	"website-crowdfunding/user"
+	// "website-crowdfunding/transaction"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -24,8 +25,10 @@ func main(){
 		log.Fatal(err)
 	}
 
+	// instansiasi supaya bisa passing variabel db
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
+	// transactionRepository := transaction.NewRepository(db)
 
 
 	userService := user.NewService(userRepository) //parsing userRepository agar punya akses ke repository
