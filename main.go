@@ -9,7 +9,7 @@ import (
 	"website-crowdfunding/handler"
 	"website-crowdfunding/helper"
 	"website-crowdfunding/user"
-	// "website-crowdfunding/transaction"
+	"website-crowdfunding/transaction"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -28,15 +28,17 @@ func main(){
 	// instansiasi supaya bisa passing variabel db
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
-	// transactionRepository := transaction.NewRepository(db)
+	transactionRepository := transaction.NewRepository(db)
 
 
 	userService := user.NewService(userRepository) //parsing userRepository agar punya akses ke repository
 	authService := auth.NewService()
 	campaignService := campaign.NewService(campaignRepository)
+	transactionService := transaction.NewService(transactionRepository)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
+	transactionHandler := handler.NewTransactionHandler(transactionService)
 
 	// membuat router
 	router := gin.Default()
@@ -55,6 +57,8 @@ func main(){
 	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
 	api.PUT("/campaign/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign)
 	api.POST("/campaign-images", authMiddleware(authService, userService), campaignHandler.UploadImage)
+
+	api.GET("/campaigns/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransactions)
 
 	router.Run()
 
