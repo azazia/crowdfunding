@@ -7,6 +7,7 @@ import (
 
 type Service interface {
 	GetTransactionsByCampaignID(input GetCampaignTransactionsInput) ([]Transaction, error)
+	GetTransactionByUserID(userID int) ([]Transaction, error)
 }
 
 type service struct {
@@ -29,6 +30,15 @@ func (s *service) GetTransactionsByCampaignID(input GetCampaignTransactionsInput
 	}
 
 	transactions, err := s.repository.GetCampaignByID(input.ID)
+	if err != nil {
+		return transactions, err
+	}
+
+	return transactions, nil
+}
+
+func (s *service) GetTransactionByUserID(userID int) ([]Transaction, error){
+	transactions, err := s.repository.GetUserByID(userID)
 	if err != nil {
 		return transactions, err
 	}

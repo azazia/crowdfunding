@@ -1,8 +1,9 @@
 package transaction
 
 import (
-	"website-crowdfunding/user"
 	"time"
+	"website-crowdfunding/campaign"
+	"website-crowdfunding/user"
 )
 
 type Transaction struct {
@@ -13,6 +14,7 @@ type Transaction struct {
 	Status     	string
 	Code       	string
 	User		user.User
+	Campaign	campaign.Campaign
 	CreatedAt  	time.Time
 	UpdatedAt	time.Time
 }
