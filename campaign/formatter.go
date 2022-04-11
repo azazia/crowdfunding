@@ -80,7 +80,7 @@ func FormatDetailCampaign(campaign Campaign) CampaignDetailFormatter {
 	formatter.Slug = campaign.Slug
 
 	formatter.FileName = ""
-	if len(formatter.FileName) > 0 {
+	if len(campaign.CampaignImages) > 0 {
 		formatter.FileName = campaign.CampaignImages[0].FileName
 	}
 
