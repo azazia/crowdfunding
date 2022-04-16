@@ -3,6 +3,7 @@ package transaction
 import (
 	"errors"
 	"website-crowdfunding/campaign"
+	"website-crowdfunding/payment"
 )
 
 type Service interface {
@@ -12,12 +13,13 @@ type Service interface {
 }
 
 type service struct {
-	repository         Repository
-	campaignRepository campaign.Repository
+	repository         	Repository
+	campaignRepository 	campaign.Repository
+	paymentService		payment.Service
 }
 
-func NewService(repository Repository, campaignRepository campaign.Repository) *service {
-	return &service{repository, campaignRepository}
+func NewService(repository Repository, campaignRepository campaign.Repository, paymentService payment.Service) *service {
+	return &service{repository, campaignRepository, paymentService}
 }
 
 func (s *service) GetTransactionsByCampaignID(input GetCampaignTransactionsInput) ([]Transaction, error) {
@@ -56,6 +58,25 @@ func (s *service) CreateTransaction(input CreateTransactionInput) (Transaction, 
 	transaction.Code		= ""
 
 	newTransaction, err := s.repository.Save(transaction)
+	if err != nil {
+		return newTransaction, err
+	}
+
+	// mapping ke struct transaction di package payment
+	paymentTransaction := payment.Transaction{
+		ID: newTransaction.ID,
+		Amount: newTransaction.Amount,
+	}
+
+	// dapatkan data payment url di package payment
+	paymentURL, err := s.paymentService.GetPaymentURL(paymentTransaction, input.User)
+	if err != nil {
+		return newTransaction, err
+	}
+
+	newTransaction.PaymentURL = paymentURL
+
+	newTransaction, err = s.repository.Update(newTransaction)
 	if err != nil {
 		return newTransaction, err
 	}

@@ -4,6 +4,7 @@ import (
 	"log"
 	"testing"
 	"website-crowdfunding/campaign"
+	"website-crowdfunding/payment"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,7 +20,7 @@ func TestCreateTransactionService(t *testing.T){
 
 	repository := NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
-	newTransaction := NewService(repository, campaignRepository)
+	newTransaction := NewService(repository, campaignRepository, payment.NewService())
 
 	input := CreateTransactionInput{}
 	input.Amount = 100000

@@ -8,8 +8,9 @@ import (
 	"website-crowdfunding/campaign"
 	"website-crowdfunding/handler"
 	"website-crowdfunding/helper"
-	"website-crowdfunding/user"
+	"website-crowdfunding/payment"
 	"website-crowdfunding/transaction"
+	"website-crowdfunding/user"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -34,7 +35,8 @@ func main(){
 	userService := user.NewService(userRepository) //parsing userRepository agar punya akses ke repository
 	authService := auth.NewService()
 	campaignService := campaign.NewService(campaignRepository)
-	transactionService := transaction.NewService(transactionRepository, campaignRepository)
+	paymentService := payment.NewService()
+	transactionService := transaction.NewService(transactionRepository, campaignRepository, paymentService)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
