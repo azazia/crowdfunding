@@ -3,14 +3,15 @@ package campaign
 import "strings"
 
 type CampaignFormatter struct {
-	ID            int    `json:"id"`
-	Name          string `json:"name"`
-	ShortDesc     string `json:"short_description"`
-	FileName      string `json:"image_url"`
-	GoalAmount    int    `json:"goal_amount"`
-	CurrentAmount int    `json:"current_amount"`
-	Slug          string `json:"slug"`
-	UserID        int    `json:"user_id"`
+	ID            	int    	`json:"id"`
+	Name          	string 	`json:"name"`
+	ShortDesc     	string 	`json:"short_description"`
+	FileName      	string 	`json:"image_url"`
+	GoalAmount    	int    	`json:"goal_amount"`
+	BackerCount		int		`json:"backer_count"`
+	CurrentAmount 	int    	`json:"current_amount"`
+	Slug          	string 	`json:"slug"`
+	UserID        	int    	`json:"user_id"`
 }
 
 func FormatCampaign(campaign Campaign) CampaignFormatter {
@@ -19,6 +20,7 @@ func FormatCampaign(campaign Campaign) CampaignFormatter {
 	formatter.Name = campaign.Name
 	formatter.ShortDesc = campaign.ShortDescription
 	formatter.GoalAmount = campaign.GoalAmount
+	formatter.BackerCount = campaign.BackerCount
 	formatter.CurrentAmount = campaign.CurrentAmount
 	formatter.Slug = campaign.Slug
 	formatter.UserID = campaign.UserID

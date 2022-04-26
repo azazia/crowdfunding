@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"website-crowdfunding/helper"
+	"website-crowdfunding/payment"
 	"website-crowdfunding/transaction"
 	"website-crowdfunding/user"
 
@@ -16,11 +17,12 @@ import (
 // repo mencari data transaction suatu campaign
 
 type transactionHandler struct {
-	transactionService transaction.Service
+	transactionService 	transaction.Service
+	paymentService		payment.Service
 }
 
-func NewTransactionHandler(transactionService transaction.Service) *transactionHandler{
-	return &transactionHandler{transactionService}
+func NewTransactionHandler(transactionService transaction.Service, paymentService payment.Service) *transactionHandler{
+	return &transactionHandler{transactionService, paymentService}
 }
 
 func (h *transactionHandler) GetCampaignTransactions(c *gin.Context){
@@ -101,4 +103,25 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context){
 
 	response := helper.APIResponse("success to create new transaction", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
+}
+
+// yang mengkonsumsi adalah midtrans bukan frontend
+func (h *transactionHandler) GetNotification(c *gin.Context){
+	var input transaction.TransactionNotificationInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil{
+		response := helper.APIResponse("Failed to get notification", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	err = h.paymentService.PaymentProcess(input)
+	if err != nil{
+		response := helper.APIResponse("Failed to get notification", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	
+	c.JSON(http.StatusOK, input)
 }
