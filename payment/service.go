@@ -2,25 +2,19 @@ package payment
 
 import (
 	"strconv"
-	"website-crowdfunding/campaign"
-	"website-crowdfunding/transaction"
 	"website-crowdfunding/user"
-
 	"github.com/veritrans/go-midtrans"
 )
 
 type service struct {
-	transactionRepository transaction.Repository
-	campaignRepository campaign.Repository
 }
 
 type Service interface {
 	GetPaymentURL(transaction Transaction, user user.User) (string, error)
-	PaymentProcess(input transaction.TransactionNotificationInput) error
 }
 
-func NewService(transactionRepository transaction.Repository, campaignRepository campaign.Repository) *service{
-	return &service{transactionRepository, campaignRepository}
+func NewService() *service{
+	return &service{}
 }
 
 // melakukan integrasi dengan sistem midtrans
@@ -53,42 +47,3 @@ func (s *service)GetPaymentURL(transaction Transaction, user user.User) (string,
 	return snapTokenResp.RedirectURL, nil
 }
 
-func (s *service) PaymentProcess(input transaction.TransactionNotificationInput) error{
-	transaction_id, _ := strconv.Atoi(input.OrderID)
-
-	transaction, err := s.transactionRepository.GetByID(transaction_id)
-	if err != nil {
-		return err
-	}
-
-	if input.PaymentType == "credit_card" &&  input.FraudStatus == "accept" && input.TransactionStatus == "capture" {
-		transaction.Status = "paid"
-	}else if input.TransactionStatus == "settlement"{
-		transaction.Status = "paid"
-	}else if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel"{
-		transaction.Status = "cancelled"
-	}
-
-	updateTransaction, err := s.transactionRepository.Update(transaction)
-	if err != nil {
-		return err
-	}
-
-	// buat update backer count dan amount di campaign
-	campaign, err := s.campaignRepository.FindByCampaignID(updateTransaction.CampaignID)
-	if err != nil {
-		return err
-	}
-
-	if updateTransaction.Status == "paid"{
-		campaign.BackerCount = campaign.BackerCount + 1
-		campaign.CurrentAmount = campaign.CurrentAmount + updateTransaction.Amount
-
-		_, err := s.campaignRepository.Update(campaign)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}

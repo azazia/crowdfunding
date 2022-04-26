@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"website-crowdfunding/helper"
-	"website-crowdfunding/payment"
 	"website-crowdfunding/transaction"
 	"website-crowdfunding/user"
 
@@ -18,11 +17,10 @@ import (
 
 type transactionHandler struct {
 	transactionService 	transaction.Service
-	paymentService		payment.Service
 }
 
-func NewTransactionHandler(transactionService transaction.Service, paymentService payment.Service) *transactionHandler{
-	return &transactionHandler{transactionService, paymentService}
+func NewTransactionHandler(transactionService transaction.Service) *transactionHandler{
+	return &transactionHandler{transactionService}
 }
 
 func (h *transactionHandler) GetCampaignTransactions(c *gin.Context){
@@ -116,7 +114,7 @@ func (h *transactionHandler) GetNotification(c *gin.Context){
 		return
 	}
 
-	err = h.paymentService.PaymentProcess(input)
+	err = h.transactionService.PaymentProcess(input)
 	if err != nil{
 		response := helper.APIResponse("Failed to get notification", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
